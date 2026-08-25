@@ -54,7 +54,7 @@ npm run tauri build
 
 ## ⚖️ مجوز
 
-MIT — آزاد برای استفاده، تغییر، و انتشار.
+© شبگرد — تمام حقوق محفوظ است. مشاهده، دانلود، و استفادهٔ شخصی آزاد است؛ بازنشر، ویرایش، و استفادهٔ تجاری بدونِ اجازهٔ صاحبِ اثر مجاز نیست.
 
 </div>
 
@@ -99,6 +99,6 @@ Requires: Node.js 18+, Rust (MSVC), WebView2
 
 ## License
 
-MIT
+© Shabgard — All rights reserved. Personal use, viewing, and downloading are permitted; redistribution, modification, and commercial use require the owner's permission.
 
 </div>
