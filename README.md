@@ -6,7 +6,17 @@
 
 شبگرد یک اپِ متن‌باز برای دورزدنِ فیلترینگ است: کانفیگ‌های آماده از منابعِ عمومی می‌گیرد، تست می‌کند، و با یک کلیک وصل می‌شود. بدون ثبت‌نام، بدون آنالیتیکس، بدون ارسالِ هیچ داده‌ای به هیچ سروری.
 
-![Screenshot](screenshots/main.png)
+![شبگرد — بنر تبلیغاتی تم لینیر](assets/banner-linear.png)
+
+<details>
+<summary>🖼️ سایر تم‌ها</summary>
+
+| | | |
+|---|---|---|
+| ![بروتالیسم](assets/banner-brutal.png) | ![بنتو](assets/banner-bento.png) | ![OLED سوئیسی](assets/banner-oled.png) |
+| ![کِلِی نرم](assets/banner-clay.png) | ![متریال](assets/banner-material.png) | ![تکتایل رامس](assets/banner-tactile.png) |
+
+</details>
 
 ## ✨ امکانات
 
