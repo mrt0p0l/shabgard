@@ -11,10 +11,11 @@
 <details>
 <summary>🖼️ سایر تم‌ها</summary>
 
-| | | |
-|---|---|---|
-| ![بروتالیسم](assets/banner-brutal.png) | ![بنتو](assets/banner-bento.png) | ![OLED سوئیسی](assets/banner-oled.png) |
-| ![کِلِی نرم](assets/banner-clay.png) | ![متریال](assets/banner-material.png) | ![تکتایل رامس](assets/banner-tactile.png) |
+| | |
+|---|---|
+| ![بنتو](assets/banner-bento.png) | ![OLED سوئیسی](assets/banner-oled.png) |
+| ![کِلِی نرم](assets/banner-clay.png) | ![متریال](assets/banner-material.png) |
+| ![تکتایل رامس](assets/banner-tactile.png) | |
 
 </details>
 
