@@ -1,0 +1,928 @@
+// شبگرد — رابط (فعلاً با داده‌ی نمونه؛ بعداً به هسته‌ی Rust وصل می‌شود)
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+// امنیت: فرار از HTML برای هر داده‌ی نامطمئن (اسمِ کانفیگ از سابِ اینترنتی و…) — جلوی XSS
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g,
+  c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// ---------- زبان (فارسی / English) ----------
+let LANG = localStorage.getItem("lang") || "en";
+const I18N = {
+  fa: {
+    off:"قطع", on:"متصل", brand:"شبگرد",
+ tab_servers:"سرورها", tab_myconfig:"کانفیگِ من", tab_blackout:"بلک‌اوت",
+ connect:"اتصال", disconnect:"قطع اتصال", connecting:"در حال اتصال…", connected_lbl:"متصل", pickfirst:"اول یک سرور انتخاب کن",
+    heroName0:"سروری انتخاب نشده", heroSub0:"یک سرور از لیست انتخاب کن",
+    fragment:"Fragment — ضدِ DPI (دورزدنِ فیلترینگ)",
+ testAll:"تست همه", onlyWorking:"فقط کارآمد", best:"اتصالِ خودکار به بهترین", search:"جستجو…",
+ mc_title:"کانفیگِ خودت", mc_add:"افزودن کانفیگ", mc_added:"کانفیگ‌های اضافه‌شده",
+    subs_title:"ساب‌ها (Subscription)", sub_add:"افزودن ساب",
+ bo_title:"بلک‌اوت — رله‌ی شخصی", relay_connect:"اتصالِ رله",
+ exit_from:"خروج از:", servers_word:"سرور", relay_row:"رله (بلک‌اوت)", checking_exit:"در حال بررسیِ محلِ خروج…",
+    route_lbl:"مسیریابی:", route_global:"همه از VPN", route_bypass:"بایپسِ ایران (سایت‌های ایرانی مستقیم)",
+    mc_hint:"لینکِ کانفیگ‌ها را بگذار (هر خط یکی):", mc_empty:"هنوز کانفیگی اضافه نکردی", sub_empty:"ساب اضافه نشده", copy:"کپی",
+    bo_desc:"وقتی اینترنت تقریباً قطع است، رله از مسیرِ گوگل + کلادفلر تونل می‌زند. یک‌بار طبقِ مراحل بساز، بعد آن را به‌عنوانِ یک VPNِ جدا روشن کن (جدا از لیستِ سرورها).",
+ relay_state0:"رله هنوز تنظیم نشده", relay_hint0:"مراحلِ پایین را انجام بده", relay_ready:"رله آماده است", relay_press:"برای اتصال دکمه را بزن", relay_on:"رله متصل (VPNِ جدا)", relay_disconnect:"قطعِ رله",
+    wz1_t:"یک کلیدِ امن بساز", wz1_b:"— هر رشته‌ای (این رمزِ بینِ گوگل و کلادفلرِ توست):",
+ wz2_t:"Cloudflare Worker بساز", wz2_a:"— برو به", wz2_b:"Workers & Pages Create Worker. یک اسم بده؛ آدرسش می‌شود مثلِ", wz2_c:". آن آدرس را اینجا بگذار:", wz2_code:"کدِ Worker (این را داخلِ ادیتور پیست کن Deploy)",
+ wz3_t:"Google Apps Script بساز", wz3_a:"— برو به", wz3_b:"New project. این کدِ آماده (با کلید و آدرسِ خودت پُر شده) را کپی و پیست کن:", wz3_code:"کدِ Code.gs (آماده)", wz3_deploy:"سپس بالا سمتِ راست Deploy New deployment کنارِ «Select type» چرخ‌دنده Web app «Who has access» = Anyone Deploy.", wz3_id:"حالا آدرسی مثلِ …/macros/s/AKfyc…/exec می‌دهد؛ قسمتِ AKfyc… را اینجا بگذار:",
+ oauth_t:"گوگل یک هشدار نشان می‌دهد", oauth_b:"(چون اپِ شخصیِ خودت است، کاملاً امن است). این مراحل را دنبال کن:", oauth_1:"«Authorize access» اکانتِ جیمیلت را انتخاب کن.", oauth_2:"صفحه‌ی «Google hasn't verified this app» پایین «Advanced» را بزن.", oauth_3:"«Go to … (unsafe)» را بزن.", oauth_4:"در آخر «Continue» / «Allow» را بزن تا اجازه بدهی.",
+    wz4_t:"ذخیره و آماده‌سازی:", wz4_save:"ذخیره کن", wz4_note:"بعد از ذخیره، دکمه‌ی «اتصالِ رله» بالا فعال می‌شود.",
+ please_wait:"لطفاً صبر کن…", failed:"ناموفق:", run_test_first:"اول «تست همه» را بزن", sub_added:"ساب اضافه شد", copied:"کپی شد", relay_conn_ok:"رله وصل شد", relay_conn_off:"رله قطع شد", gas_fill_first:"اول «کلید» (مرحله ۱) و «آدرسِ Worker» (مرحله ۲) را پر کن…", press_test:"«تست همه» را بزن", loading:"در حال بارگذاری…",
+    your_net:"نتِ تو:", frag_on:"Fragment روشن شد", frag_off:"Fragment خاموش شد", copy_fail:"کپی نشد — متن را دستی انتخاب کن", need_key_sid:"کلید (۱) و Script ID (۳) لازم است", relay_saved:"رله ذخیره شد — حالا از دکمه‌ی بالا وصل شو", log_empty:"هنوز چیزی نیست…", fetching_servers:"در حال گرفتنِ سرورها…", fetch_fail:"گرفتن نشد:",
+ mode_lbl:"حالت:", mode_proxy:"پراکسیِ سیستم (مرورگر)", mode_tun:"TUN — کلِ سیستم", mode_game:"گیم (کم‌تأخیر)",
+ mode_hint_proxy:"فقط مرورگر و برنامه‌هایی که پراکسی را می‌خوانند از VPN می‌روند.", mode_hint_tun:"همه‌ی برنامه‌ها (بازی، تلگرام و…) از تونل می‌روند. نیاز به دسترسیِ ادمین (پنجره‌ی UAC Yes).", mode_hint_game:"کم‌ترین پینگ/پکت‌لاس + گیم‌بوست: کاهشِ تأخیر، نگه‌داشتنِ موقتِ آپدیت‌های ویندوز و آزادسازیِ پهنای باند برای بازی (موقعِ قطع همه برمی‌گردد). کلِ ترافیک از تونل؛ نیاز به ادمین (UAC Yes).",
+    game_exe_lbl:"بازی‌های محبوب خودکار تشخیص داده و اولویت‌شان بالا می‌رود. اگر بازیت در لیست نبود، اسمِ پروسه‌اش را اینجا بنویس (اختیاری).",
+ tun_starting:"در حال بالا آوردنِ تونل… (پنجره‌ی ادمین را تأیید کن)", game_starting:"در حال آماده‌سازیِ حالتِ گیم… (پنجره‌ی ادمین را تأیید کن)", tun_connected:"TUN متصل — کلِ سیستم از تونل", game_connected:"گیم متصل — کلِ سیستم از تونل",
+    cancelled:"کنسل شد", cancel_hint:"برای کنسل، دکمه را دوباره بزن",
+    set_title:"تنظیمات", set_theme:"ظاهر", set_lang:"زبان", set_openlog:"نمایشِ لاگ", theme_set:"ظاهر عوض شد:",
+    stop_test:"توقفِ تست", test_stopped:"تست متوقف شد",
+    relay_starting:"در حال بالا آوردنِ رله… (چند ثانیه؛ اولین بار گواهی هم نصب می‌شود)", relay_on_hint:"همه‌ی ترافیکِ مرورگر از رله می‌رود",
+    matching_net:"در حال تطبیق با نتِ تو…", matched_n:"{n} کانفیگِ مناسبِ نتِ تو از {all} تا (صرفه‌جویی در دیتا)",
+ frag_proxy_only:"Fragment فقط در حالتِ «پراکسیِ سیستم» کار می‌کند.", conn_lost:"اتصال قطع شد — دوباره وصل شو", already_testing:"تست در حال اجراست…",
+ an_title:"تحلیلِ نت", an_hint:"می‌فهمد نتِ تو چطور فیلتر شده و چه نوع کانفیگی رویش بهتر کار می‌کند.",
+    an_running:"در حال تحلیلِ نت… (چند ثانیه)", an_yes:"باز است", an_no:"بسته/محدود",
+    an_udp:"عبورِ UDP", an_quic:"QUIC (پورت ۴۴۳ روی UDP)", an_sni:"فیلترینگ روی SNI",
+    an_clean:"تمیز", an_dpi:"DPI فعال", an_dns:"سلامتِ DNS", an_poisoned:"مسموم",
+    an_cdn:"دسترسی به کلادفلر", an_ports:"پورت‌های باز", an_advice:"نتیجه برای تو:",
+ adv_udp_ok:"UDP باز است hysteria2/tuic بهترین گزینه‌اند (کم‌ترین پینگ و پکت‌لاس؛ عالی برای بازی).",
+ adv_udp_limited:"UDP محدود است (QUIC رد نشد) hysteria2/tuic ممکن است کار نکند؛ روی reality/TLS بمان.",
+ adv_udp_blocked:"UDP بسته است hysteria2/tuic کار نمی‌کند؛ فقط کانفیگ‌های TCP (reality یا ws-tls).",
+ adv_sni_dpi:"فیلترینگ روی SNI فعال است کانفیگِ REALITY استفاده کن یا Fragment را روشن کن.",
+ adv_dns_poison:"DNSِ نتت مسموم است DNSِ رمزی لازم است؛ اپ خودش این کار را می‌کند.",
+ adv_no_443:"پورت ۴۴۳ مستقیم بسته است کانفیگ روی پورت‌های دیگر (۸۰/۸۰۸۰/۲۰۵۳) را امتحان کن.",
+ adv_cdn_ok:"IPهای کلادفلر جواب می‌دهند کانفیگ‌های CDN/Worker روی نتت خوب کار می‌کنند.",
+ isp_pick:"نتِ خودت را انتخاب کن", isp_pick_hint:"تشخیصِ خودکار گاهی اشتباه می‌کند (مثلاً سامانتل روی خطِ رایتل است). نتِ درستت را بزن:", log_title:"لاگِ پشت‌صحنه", ready:"آماده",
+  },
+  en: {
+    off:"Off", on:"Connected", brand:"Shabgard",
+ tab_servers:"Servers", tab_myconfig:"My Config", tab_blackout:"Blackout",
+ connect:"Connect", disconnect:"Disconnect", connecting:"Connecting…", connected_lbl:"Connected", pickfirst:"Pick a server first",
+    heroName0:"No server selected", heroSub0:"Pick a server from the list",
+    fragment:"Fragment — anti-DPI (bypass filtering)",
+ testAll:"Test all", onlyWorking:"Working only", best:"Auto-connect to best", search:"Search…",
+ mc_title:"Your config", mc_add:"Add config", mc_added:"Added configs",
+    subs_title:"Subscriptions", sub_add:"Add sub",
+ bo_title:"Blackout — personal relay", relay_connect:"Connect relay",
+ exit_from:"Exit from:", servers_word:"servers", relay_row:"Relay (blackout)", checking_exit:"Checking exit location…",
+    route_lbl:"Routing:", route_global:"All via VPN", route_bypass:"Bypass Iran (Iranian sites direct)",
+    mc_hint:"Paste config links (one per line):", mc_empty:"No configs added yet", sub_empty:"No subscriptions added", copy:"Copy",
+    bo_desc:"When the internet is nearly down, the relay tunnels via Google + Cloudflare. Set it up once, then turn it on as a separate VPN (separate from the server list).",
+ relay_state0:"Relay not set up yet", relay_hint0:"Do the steps below", relay_ready:"Relay is ready", relay_press:"Press the button to connect", relay_on:"Relay connected (separate VPN)", relay_disconnect:"Disconnect relay",
+    wz1_t:"Make a secret key", wz1_b:"— any string (your secret between Google and Cloudflare):",
+ wz2_t:"Create a Cloudflare Worker", wz2_a:"— go to", wz2_b:"Workers & Pages Create Worker. Give it a name; its address looks like", wz2_c:". Put that address here:", wz2_code:"Worker code (paste into the editor Deploy)",
+ wz3_t:"Create a Google Apps Script", wz3_a:"— go to", wz3_b:"New project. Copy & paste this ready code (filled with your key and address):", wz3_code:"Code.gs (ready)", wz3_deploy:"Then top-right Deploy New deployment gear next to Select type Web app Who has access = Anyone Deploy.", wz3_id:"It gives an address like …/macros/s/AKfyc…/exec; put the AKfyc… part here:",
+ oauth_t:"Google shows a warning", oauth_b:"(it is your own personal app, completely safe). Follow these steps:", oauth_1:"Authorize access pick your Gmail account.", oauth_2:"On the Google hasn't verified this app page click Advanced at the bottom.", oauth_3:"Click Go to … (unsafe).", oauth_4:"Finally click Continue / Allow to grant access.",
+    wz4_t:"Save & prepare:", wz4_save:"Save", wz4_note:"After saving, the Connect relay button above becomes active.",
+ please_wait:"Please wait…", failed:"Failed:", run_test_first:"Run Test all first", sub_added:"Subscription added", copied:"Copied", relay_conn_ok:"Relay connected", relay_conn_off:"Relay disconnected", gas_fill_first:"Fill the key (step 1) and Worker address (step 2) first…", press_test:"press Test all", loading:"Loading…",
+    your_net:"Your net:", frag_on:"Fragment enabled", frag_off:"Fragment disabled", copy_fail:"Copy failed — select the text manually", need_key_sid:"Key (1) and Script ID (3) required", relay_saved:"Relay saved — now connect from the button above", log_empty:"Nothing yet…", fetching_servers:"Fetching servers…", fetch_fail:"Fetch failed:",
+ mode_lbl:"Mode:", mode_proxy:"System proxy (browser)", mode_tun:"TUN — whole system", mode_game:"Game (low latency)",
+ mode_hint_proxy:"Only the browser and proxy-aware apps go through the VPN.", mode_hint_tun:"All apps (games, Telegram, …) go through the tunnel. Needs admin (accept the UAC prompt Yes).", mode_hint_game:"Lowest ping and packet-loss for gaming; all traffic via the tunnel. Needs admin (UAC Yes). Find the best server with Test all.",
+ tun_starting:"Bringing up the tunnel… (accept the admin prompt)", game_starting:"Preparing Game mode… (accept the admin prompt)", tun_connected:"TUN connected — whole system via tunnel", game_connected:"Game connected — whole system via tunnel", game_exe_lbl:"Popular games are auto-detected and prioritized. If yours isn't listed, add its process name here (optional).",
+    cancelled:"Cancelled", cancel_hint:"Press the button again to cancel",
+    set_title:"Settings", set_theme:"Appearance", set_lang:"Language", set_openlog:"Show log", theme_set:"Theme changed:",
+    stop_test:"Stop test", test_stopped:"Test stopped",
+    relay_starting:"Bringing up the relay… (a few seconds; first run also installs the certificate)", relay_on_hint:"All browser traffic goes through the relay",
+    matching_net:"Matching to your network…", matched_n:"{n} configs match your network out of {all} (saves data)",
+ frag_proxy_only:"Fragment only applies in System proxy mode.", conn_lost:"Connection lost — connect again", already_testing:"A test is already running…",
+ an_title:"Network analysis", an_hint:"Finds out how your network is filtered and which config types work best on it.",
+    an_running:"Analyzing your network… (a few seconds)", an_yes:"Open", an_no:"Blocked/limited",
+    an_udp:"UDP passes", an_quic:"QUIC (UDP port 443)", an_sni:"SNI filtering",
+    an_clean:"Clean", an_dpi:"DPI active", an_dns:"DNS integrity", an_poisoned:"Poisoned",
+    an_cdn:"Cloudflare reachable", an_ports:"Open ports", an_advice:"What this means for you:",
+ adv_udp_ok:"UDP is open hysteria2/tuic are your best choice (lowest ping and packet loss; great for gaming).",
+ adv_udp_limited:"UDP is limited (QUIC didn't pass) hysteria2/tuic may not work; stick to reality/TLS.",
+ adv_udp_blocked:"UDP is blocked hysteria2/tuic won't work; use TCP configs only (reality or ws-tls).",
+ adv_sni_dpi:"SNI-based filtering is active use a REALITY config or turn Fragment on.",
+ adv_dns_poison:"Your DNS is poisoned encrypted DNS is required; the app already does this.",
+ adv_no_443:"Port 443 is blocked directly try configs on other ports (80/8080/2053).",
+ adv_cdn_ok:"Cloudflare IPs respond CDN/Worker configs work well on your network.",
+ isp_pick:"Pick your network", isp_pick_hint:"Auto-detection is sometimes wrong (e.g. SamanTel runs on Rightel's network). Pick your real network:", log_title:"Backstage log", ready:"Ready",
+  },
+};
+const t = (k) => (I18N[LANG] && I18N[LANG][k]) || I18N.fa[k] || k;
+
+// 
+//  تم‌ها — ۷ ظاهر، از «تنظیمات» قابلِ تعویض. فقط متغیرهای CSS عوض می‌شود.
+// 
+const THEMES = [
+  { id:"linear",   fa:"لینیر (تیره)",      en:"Linear Dark",         c:["#5E6AD2","#25c26e","#0a0a0f"] },
+  { id:"brutal",   fa:"بروتالیسم",          en:"Neo-Brutalism",       c:["#ffe14d","#7bf59a","#f3f0e7"] },
+  { id:"bento",    fa:"بنتو",               en:"Bento Grid",          c:["#4f8cff","#2ecc71","#0e1014"] },
+  { id:"oled",     fa:"سوئیسی (OLED)",      en:"OLED Swiss",          c:["#ffffff","#00e07a","#000000"] },
+  { id:"clay",     fa:"کِلِی نرم",          en:"Soft Clay",           c:["#8b7bff","#71e8ad","#1c1b2e"] },
+  { id:"material", fa:"متریال",             en:"Material Expressive", c:["#d0bcff","#9ff2c0","#14131a"] },
+  { id:"tactile",  fa:"تکتایل (رامس)",      en:"Tactile / Rams",      c:["#e2571f","#1d6b3f","#d8d5cd"] },
+];
+const THEME_DEFAULT = "linear";
+function curTheme(){ return localStorage.getItem("theme") || THEME_DEFAULT; }
+function applyTheme(id){
+  if (!THEMES.some(t => t.id === id)) id = THEME_DEFAULT;
+  document.documentElement.setAttribute("data-theme", id);
+  localStorage.setItem("theme", id);
+  renderThemeGrid();
+}
+function renderThemeGrid(){
+  const g = $("#themeGrid"); if (!g) return;
+  const cur = curTheme();
+  g.innerHTML = THEMES.map(t => `
+    <button class="th ${t.id === cur ? "on" : ""}" data-theme-id="${esc(t.id)}">
+      <span class="th-prev" style="background:${esc(t.c[2])}">
+        <span class="th-dot" style="background:${esc(t.c[1])}"></span>
+        <span class="th-bar" style="background:${esc(t.c[0])}"></span>
+      </span>
+      <span class="th-name">${esc(LANG === "fa" ? t.fa : t.en)}</span>
+    </button>`).join("");
+  g.querySelectorAll(".th").forEach(b => b.onclick = () => {
+    applyTheme(b.getAttribute("data-theme-id"));
+    status(t("theme_set") + " " + b.querySelector(".th-name").textContent);
+  });
+}
+applyTheme(curTheme());
+
+const bypassNow = () => (localStorage.getItem("route") || "global") === "bypass";
+// حالتِ اتصال: proxy (پیش‌فرض) / tun / game
+const connMode = () => localStorage.getItem("mode") || "proxy";
+function updateModeHint() {
+  const h = $("#modeHint"); if (!h) return;
+  const m = connMode();
+  h.textContent = m === "tun" ? t("mode_hint_tun") : m === "game" ? t("mode_hint_game") : t("mode_hint_proxy");
+  // فیلدِ اسمِ بازی فقط در حالتِ گیم
+  const row = $("#gameExeRow");
+  if (row) {
+    row.style.display = m === "game" ? "flex" : "none";
+    const inp = $("#gameExe"); if (inp) inp.value = localStorage.getItem("game_exe") || "";
+    const lbl = $("#gameExeLbl"); if (lbl) lbl.textContent = t("game_exe_lbl");
+  }
+}
+
+// نامِ کشورها (دو-زبانه) — کدِ کشور از remarkِ کانفیگ استخراج می‌شود
+const CC_NAMES = {
+  DE:{fa:"آلمان",en:"Germany"}, NL:{fa:"هلند",en:"Netherlands"}, FR:{fa:"فرانسه",en:"France"},
+  GB:{fa:"انگلیس",en:"UK"}, UK:{fa:"انگلیس",en:"UK"}, US:{fa:"آمریکا",en:"USA"}, CA:{fa:"کانادا",en:"Canada"},
+  FI:{fa:"فنلاند",en:"Finland"}, SE:{fa:"سوئد",en:"Sweden"}, NO:{fa:"نروژ",en:"Norway"}, DK:{fa:"دانمارک",en:"Denmark"},
+  CH:{fa:"سوئیس",en:"Switzerland"}, AT:{fa:"اتریش",en:"Austria"}, PL:{fa:"لهستان",en:"Poland"}, CZ:{fa:"چک",en:"Czechia"},
+  RU:{fa:"روسیه",en:"Russia"}, UA:{fa:"اوکراین",en:"Ukraine"}, TR:{fa:"ترکیه",en:"Turkey"}, IT:{fa:"ایتالیا",en:"Italy"},
+  ES:{fa:"اسپانیا",en:"Spain"}, PT:{fa:"پرتغال",en:"Portugal"}, IE:{fa:"ایرلند",en:"Ireland"}, BE:{fa:"بلژیک",en:"Belgium"},
+  RO:{fa:"رومانی",en:"Romania"}, BG:{fa:"بلغارستان",en:"Bulgaria"}, HU:{fa:"مجارستان",en:"Hungary"}, GR:{fa:"یونان",en:"Greece"},
+  RS:{fa:"صربستان",en:"Serbia"}, HR:{fa:"کرواسی",en:"Croatia"}, SK:{fa:"اسلواکی",en:"Slovakia"}, SI:{fa:"اسلوونی",en:"Slovenia"},
+  LT:{fa:"لیتوانی",en:"Lithuania"}, LV:{fa:"لتونی",en:"Latvia"}, EE:{fa:"استونی",en:"Estonia"}, MD:{fa:"مولداوی",en:"Moldova"},
+  BR:{fa:"برزیل",en:"Brazil"}, AR:{fa:"آرژانتین",en:"Argentina"}, MX:{fa:"مکزیک",en:"Mexico"}, CL:{fa:"شیلی",en:"Chile"},
+  AE:{fa:"امارات",en:"UAE"}, SA:{fa:"عربستان",en:"Saudi"}, QA:{fa:"قطر",en:"Qatar"}, KW:{fa:"کویت",en:"Kuwait"}, OM:{fa:"عمان",en:"Oman"},
+  IN:{fa:"هند",en:"India"}, SG:{fa:"سنگاپور",en:"Singapore"}, JP:{fa:"ژاپن",en:"Japan"}, KR:{fa:"کره",en:"Korea"},
+  HK:{fa:"هنگ‌کنگ",en:"Hong Kong"}, TW:{fa:"تایوان",en:"Taiwan"}, CN:{fa:"چین",en:"China"}, ID:{fa:"اندونزی",en:"Indonesia"},
+  MY:{fa:"مالزی",en:"Malaysia"}, TH:{fa:"تایلند",en:"Thailand"}, VN:{fa:"ویتنام",en:"Vietnam"}, PH:{fa:"فیلیپین",en:"Philippines"},
+  AU:{fa:"استرالیا",en:"Australia"}, NZ:{fa:"نیوزیلند",en:"New Zealand"}, ZA:{fa:"آفریقای‌جنوبی",en:"South Africa"},
+  SC:{fa:"سیشل",en:"Seychelles"}, CY:{fa:"قبرس",en:"Cyprus"}, LU:{fa:"لوکزامبورگ",en:"Luxembourg"}, IS:{fa:"ایسلند",en:"Iceland"},
+  AM:{fa:"ارمنستان",en:"Armenia"}, GE:{fa:"گرجستان",en:"Georgia"}, KZ:{fa:"قزاقستان",en:"Kazakhstan"}, IR:{fa:"ایران",en:"Iran"},
+};
+// نامِ ISPهای ایران به انگلیسی
+const ISP_EN = {
+  "رایتل / سامانتل":"Rightel / SamanTel", "همراه اول":"Hamrah-e Aval (MCI)", "ایرانسل":"Irancell",
+  "مخابرات":"TCI", "شاتل":"Shatel", "آسیاتک":"AsiaTech", "پارس‌آنلاین":"ParsOnline", "مبین‌نت":"MobinNet",
+  "های‌وب":"HiWEB", "صبانت":"Sabanet", "رسپینا":"Respina", "زیتل":"Zitel", "داتک":"Datak", "فن‌آوا":"Fanava",
+  "افرانت":"Afranet", "پیشگامان":"Pishgaman", "آروان":"ArvanCloud", "کلادفلر":"Cloudflare", "نامشخص":"Unknown",
+};
+function localizeCountry(name) {
+  const m = String(name).match(/\b([A-Z]{2})\b/);
+  if (m && CC_NAMES[m[1]]) { const cc = m[1]; return `${CC_NAMES[cc][LANG] || CC_NAMES[cc].en} ${cc}`; }
+  return name;
+}
+function localizeIsp(isp) { return (LANG === "en" && ISP_EN[isp]) ? ISP_EN[isp] : isp; }
+
+function applyLang() {
+  document.documentElement.dir = LANG === "fa" ? "rtl" : "ltr";
+  document.documentElement.lang = LANG;
+  $$("[data-i18n]").forEach(el => { el.textContent = t(el.getAttribute("data-i18n")); });
+  const set = (sel, k) => { const e = $(sel); if (e) e.textContent = t(k); };
+  set("#btnTest", "testAll"); set("#btnOnlyWorking", "onlyWorking"); set("#btnBest", "best");
+  set(".switch .lbl", "fragment"); set("#routeLbl", "route_lbl"); set("#modeLbl", "mode_lbl");
+  const rs = $("#routeSel");
+  if (rs) {
+    const cur = localStorage.getItem("route") || "global";
+    rs.innerHTML = `<option value="global">${esc(t("route_global"))}</option><option value="bypass">${esc(t("route_bypass"))}</option>`;
+    rs.value = cur;
+  }
+  const ms = $("#modeSel");
+  if (ms) {
+    ms.innerHTML = `<option value="proxy">${esc(t("mode_proxy"))}</option>`
+      + `<option value="tun">${esc(t("mode_tun"))}</option>`
+      + `<option value="game">${esc(t("mode_game"))}</option>`;
+    ms.value = connMode();
+    updateModeHint();
+  }
+  const s = $("#search"); if (s) s.placeholder = t("search");
+  renderHero();
+  updateConnect(); applyNetbar(); renderList();
+  if (typeof renderMini === "function") renderMini();
+  // عنوانِ پنجره (اسمِ برنامه) هم با زبان عوض شود
+  try { if (TAURI && window.__TAURI__.window) window.__TAURI__.window.getCurrentWindow().setTitle(t("brand")); } catch (e) {}
+}
+
+// آیا داخل Tauri هستیم؟ (وقتی هسته آماده شد invoke را صدا می‌زنیم)
+const TAURI = !!(window.__TAURI__);
+async function call(cmd, args) {
+  if (TAURI) return window.__TAURI__.core.invoke(cmd, args);
+  return mock(cmd, args); // در مرورگرِ ساده: دادهٔ نمونه
+}
+
+// ---------- دادهٔ نمونه (فقط برای پیش‌نمایشِ ظاهر) ----------
+const FLAGS = { DE:"", NL:"", IT:"", FR:"", GB:"", US:"", FI:"", CA:"", CH:"", AE:"", TR:"", SE:""};
+let MOCK = [
+ { link:"__relay__", cc:"", name:"رله (بلک‌اوت)", icon:"", ping:null },
+  { link:"a", cc:"DE", name:"DE | Frankfurt", ping:118 },
+  { link:"b", cc:"NL", name:"NL | Amsterdam", ping:142 },
+  { link:"c", cc:"FI", name:"FI | Helsinki", ping:156 },
+  { link:"d", cc:"FR", name:"FR | Paris", ping:171 },
+  { link:"e", cc:"CH", name:"CH | Zurich", ping:188 },
+  { link:"f", cc:"GB", name:"GB | London", ping:203 },
+  { link:"g", cc:"SE", name:"SE | Stockholm", ping:224 },
+  { link:"h", cc:"US", name:"US | New York", ping:262 },
+  { link:"i", cc:"CA", name:"CA | Toronto", ping:288 },
+  { link:"j", cc:"TR", name:"TR | Istanbul", ping:null },
+];
+function mock(cmd, args) {
+  if (cmd === "list_servers") return Promise.resolve(MOCK);
+  if (cmd === "test_all") return new Promise(r => setTimeout(() =>
+    r((args?.links || []).map(() => 90 + Math.floor(Math.random()*400))), 700));
+  if (cmd === "detect_net") return Promise.resolve({ isp:"سامانتل (نمونه)", ip:"5.1.2.3", cc:"IR", country:"Iran" });
+  if (cmd === "exit_info") return Promise.resolve({ isp:"OVH", ip:"216.106.189.166", cc:"FR", country:"France · Paris" });
+ if (cmd ==="get_log") return Promise.resolve(["12:00:00 نمونه‌ی لاگ","12:00:03 متصل شد"]);
+  return Promise.resolve(null);
+}
+
+// ---------- وضعیت ----------
+const S = { sel:null, connected:false, busy:false, onlyWorking:false, rows:[], filter:"", isp:"", detectedIsp:"", ip:"", selCc:"", selBestPing:null, exitInfo:null, testLinks:null, connectedAt:null, testing:false, usage:null };
+
+// مدتِ اتصال + نشانگرِ Kill Switch (پایینِ صفحه)
+function fmtDur(ms) {
+  const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return (h ? String(h).padStart(2, "0") + ":" : "") + String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
+}
+// مصرفِ داده‌ی واقعی (از آمارِ xray) — هر ۳ ثانیه، فقط وقتی وصلیم
+function fmtBytes(n) {
+  n = Number(n) || 0;
+  if (n < 1024) return n + "B";
+  if (n < 1048576) return (n / 1024).toFixed(0) + "KB";
+  if (n < 1073741824) return (n / 1048576).toFixed(1) + "MB";
+  return (n / 1073741824).toFixed(2) + "GB";
+}
+setInterval(async () => {
+  if (!TAURI || !S.connected) { S.usage = null; return; }
+  try { S.usage = await call("usage"); } catch (e) {}
+}, 3000);
+
+setInterval(() => {
+  const el = document.querySelector("#connStats"); if (!el) return;
+  if (S.connected && S.connectedAt) {
+    // صادقانه: Kill Switch (اتصالِ مجددِ خودکار) فقط در حالتِ پراکسی است؛ در TUN/گیم
+    // اگر تونل بیفتد نمی‌شود بی‌UAC برش گرداند، پس اپ قطع را اعلام می‌کند.
+    const m = connMode();
+ const guard = m ==="proxy"? (LANG ==="fa"?"Kill Switch روشن":"Kill Switch on")
+ : m ==="game"? (LANG ==="fa"?"گیم — کلِ سیستم":"Game — whole system")
+ : (LANG ==="fa"?"TUN — کلِ سیستم":"TUN — whole system");
+    const u = S.usage;
+ const data = (u && (u[0] || u[1])) ?"·"+ fmtBytes(u[0]) +""+ fmtBytes(u[1]) :"";
+ el.textContent =""+ fmtDur(Date.now() - S.connectedAt) + data +"·"+ guard;
+  } else el.textContent = "";
+}, 1000);
+
+// رندرِ زنده با debounce (موقعِ تستِ زنده، صدها به‌روزرسانی را جمع می‌کند)
+let _renderTimer = null;
+function scheduleRender() { if (_renderTimer) return; _renderTimer = setTimeout(() => { _renderTimer = null; renderList(); }, 350); }
+
+// هدر (اسمِ کشور + خروج از) — با تغییرِ زبان هم درست به‌روز می‌شود
+function renderHero() {
+  // در حالِ اتصال: به‌جای متنِ عادی، راهنمای کنسل را نشان بده
+  if (S.busy) { $("#heroName").textContent = t("connecting"); $("#heroSub").textContent = t("cancel_hint"); return; }
+  if (!S.sel) { $("#heroName").textContent = t("heroName0"); $("#heroSub").textContent = t("heroSub0"); return; }
+  // وقتی متصلیم و محلِ واقعیِ خروج را داریم، همان کشورِ واقعی را نشان بده (دقیق‌تر از برچسبِ کانفیگ)
+  const cc = (S.connected && S.exitInfo && S.exitInfo.cc) ? S.exitInfo.cc : S.selCc;
+  $("#heroName").textContent = cc ? ccName(cc) : "—";
+  if (S.connected && S.exitInfo && S.exitInfo.country)
+    $("#heroSub").textContent = t("exit_from") + " " + S.exitInfo.country + (S.exitInfo.ip ? " (" + S.exitInfo.ip + ")" : "");
+  else if (S.connected) $("#heroSub").textContent = t("checking_exit");
+  else $("#heroSub").textContent = (S.selBestPing != null && S.selBestPing >= 0)
+    ? ((LANG === 'fa' ? 'بهترین پینگِ این کشور: ' : 'Best ping: ') + S.selBestPing + 'ms') : t("heroSub0");
+}
+
+// ---------- یادگیریِ کانفیگ‌های کارآمد برای هر ISP ----------
+function ispKey() { return "ok_" + (S.isp || "?"); }
+function rememberWorking(links) { try { localStorage.setItem(ispKey(), JSON.stringify(links)); } catch (e) {} }
+function rememberedSet() { try { return new Set(JSON.parse(localStorage.getItem(ispKey()) || "[]")); } catch (e) { return new Set(); } }
+
+const ISP_LIST = ["رایتل / سامانتل","همراه اول","ایرانسل","مخابرات","شاتل","آسیاتک",
+  "پارس‌آنلاین","مبین‌نت","های‌وب","صبانت","رسپینا","زیتل","داتک","فن‌آوا","افرانت","پیشگامان","سایر"];
+
+function applyNetbar() {
+  const overridden = !!localStorage.getItem("isp_override");
+  const label = LANG === "fa" ? "نتِ تو" : "Your net";
+ const editT = overridden ? (LANG ==="fa"?"دستی":"manual") : (LANG ==="fa"?"تغییر":"change");
+  const unknown = LANG === "fa" ? "نامشخص" : "Unknown";
+ $("#netbar").innerHTML = ` ${label}: <b>${esc(localizeIsp(S.isp) || unknown)}</b>` +
+    (S.ip ? ` <span class="dim">(${esc(S.ip)})</span>` : "") +
+    ` <span class="edit-isp">${editT}</span>`;
+}
+
+async function detectNet() {
+  const override = localStorage.getItem("isp_override");
+  if (override) S.isp = override;
+  try {
+    const net = await call("detect_net");
+    S.detectedIsp = net.isp || "نامشخص";
+    S.ip = net.ip || "";
+    if (!override) S.isp = S.detectedIsp;
+  } catch (e) { if (!override) S.isp = "نامشخص"; }
+  applyNetbar();
+ renderList(); // تا های نتِ تو نمایش داده شوند
+}
+
+function openIspPicker() {
+  const grid = $("#ispGrid"); grid.innerHTML = "";
+  const cur = localStorage.getItem("isp_override");
+  const opts = ["خودکار (" + (S.detectedIsp || "?") + ")", ...ISP_LIST];
+  opts.forEach((name, i) => {
+    const b = document.createElement("button");
+    b.className = "isp-opt" + (((i === 0) && !cur) || name === cur ? " on" : "");
+    b.textContent = name;
+    b.onclick = () => {
+      if (i === 0) { localStorage.removeItem("isp_override"); S.isp = S.detectedIsp || "نامشخص"; }
+      else { localStorage.setItem("isp_override", name); S.isp = name; }
+      applyNetbar(); renderList();
+      $("#ispModal").classList.remove("open");
+      status(t("your_net") + " " + S.isp);
+    };
+    grid.appendChild(b);
+  });
+  $("#ispModal").classList.add("open");
+}
+$("#netbar").onclick = openIspPicker;
+$("#ispClose").onclick = () => $("#ispModal").classList.remove("open");
+$("#ispModal").onclick = (e) => { if (e.target.id === "ispModal") $("#ispModal").classList.remove("open"); };
+
+// ---------- تب‌ها ----------
+$$(".tab").forEach(t => t.onclick = () => {
+  $$(".tab").forEach(x => x.classList.remove("active"));
+  $$(".panel").forEach(x => x.classList.remove("active"));
+  t.classList.add("active");
+  $("#tab-" + t.dataset.tab).classList.add("active");
+});
+
+// ---------- لیستِ سرورها ----------
+function pingClass(p){ if(p==null) return ""; if(p<0) return "bad"; if(p<200) return "good"; if(p<400) return "mid"; return "bad"; }
+function pingText(p){ if(p==null) return""; if(p<0) return""; return p+"ms"; }
+
+const ccName = (cc) => {
+ if (!cc || cc ==="??") return LANG ==="fa"?"سایر":"Other";
+  const n = CC_NAMES[cc]; return n ? (n[LANG] || n.en) : cc;
+};
+function countryOf(r) { if (r.cc) return r.cc; const m = String(r.name).match(/\b([A-Z]{2})\b/); return m ? m[1] : "??"; }
+
+// گروه‌بندی per کشور: یک ردیف per کشور، بهترین کانفیگِ کارآمد داخلش. کشورِ همه‌مرده غیب.
+// کانفیگ‌های دستیِ خودت (از حافظه‌ی محلی؛ مستقل از ترتیبِ بارگذاری)
+function mineLinks() {
+  try { return new Set(JSON.parse(localStorage.getItem("manual") || "[]")); }
+  catch (e) { return new Set(); }
+}
+
+function groupedRows() {
+  const g = {};
+ const mine = mineLinks(); // کانفیگ‌های خودت بخشِ جدا دارند اینجا تکرار نشوند
+  for (const r of S.rows) {
+    if (r.link === "__relay__" || mine.has(r.link)) continue;
+    const cc = countryOf(r);
+    (g[cc] = g[cc] || { cc, configs: [] }).configs.push(r);
+  }
+  let arr = Object.values(g).map(x => {
+    const working = x.configs.filter(r => r.ping != null && r.ping >= 0).sort((a, b) => a.ping - b.ping);
+    const tested = x.configs.filter(r => r.ping != null).length;
+    const best = working[0] || null;
+    return { cc: x.cc, count: x.configs.length, configs: x.configs,
+             bestLink: best ? best.link : x.configs[0].link,
+             bestPing: best ? best.ping : null,
+             dead: (tested === x.configs.length && working.length === 0) };
+  });
+ arr = arr.filter(x => !x.dead); // کشوری که همه‌ی کانفیگش تست شد و هیچ‌کدوم کار نکرد حذف
+  arr.sort((a, b) => (a.bestPing != null ? a.bestPing : 1e9) - (b.bestPing != null ? b.bestPing : 1e9));
+  return arr;
+}
+
+function renderList() {
+  const el = $("#serverList"); el.innerHTML = "";
+  const remembered = rememberedSet();
+
+ // بخشِ جدا برای کانفیگ‌های خودت (تکی، نه گروهیِ کشوری) تا گم نشوند 
+  const mineSet = mineLinks();
+  if (mineSet.size) {
+    let mineRows = S.rows.filter(r => mineSet.has(r.link));
+    if (S.filter) mineRows = mineRows.filter(r => String(r.name).toLowerCase().includes(S.filter));
+    if (S.onlyWorking) mineRows = mineRows.filter(r => r.ping != null && r.ping >= 0);
+    if (mineRows.length) {
+      const head = document.createElement("div");
+      head.className = "grp-head";
+ head.textContent = ` ${t("mc_added")} (${mineRows.length})`;
+      el.appendChild(head);
+      for (const r of mineRows) {
+        const d = document.createElement("div");
+        d.className = "srv mine" + (r.link === S.sel ? " sel" : "");
+        d.innerHTML = `<span class="ping ${pingClass(r.ping)}">${pingText(r.ping)}</span>
+                       <span class="srv-name">${esc(r.name)}</span>
+ <span class="flag">${FLAGS[countryOf(r)] ||""}</span>`;
+        d.onclick = () => selectServer(r.link);
+        d.ondblclick = () => { selectServer(r.link); toggleConnect(); };
+        el.appendChild(d);
+      }
+      const sep = document.createElement("div");
+      sep.className = "grp-head";
+ sep.textContent = ` ${t("tab_servers").replace("","")}`;
+      el.appendChild(sep);
+    }
+  }
+
+  let groups = groupedRows();
+  if (S.filter) groups = groups.filter(x => ccName(x.cc).toLowerCase().includes(S.filter) || x.cc.toLowerCase().includes(S.filter));
+  if (S.onlyWorking) groups = groups.filter(x => x.bestPing != null && x.bestPing >= 0);
+  for (const x of groups) {
+    const sel = x.configs.some(c => c.link === S.sel);
+    const d = document.createElement("div");
+    d.className = "srv" + (sel ? " sel" : "");
+ const star = remembered.has(x.bestLink) ? `<span class="star"title="${LANG==='fa'?'برای نتِ تو کار کرد':'works for your net'}"></span>` :"";
+    d.innerHTML = `<span class="ping ${pingClass(x.bestPing)}">${pingText(x.bestPing)}</span>
+                   <span class="srv-name">${star}${esc(ccName(x.cc))} <span class="cnt">${x.count}</span></span>
+ <span class="flag">${FLAGS[x.cc] ||""}</span>`;
+    d.onclick = () => selectCountry(x);
+    d.ondblclick = () => { selectCountry(x); toggleConnect(); };
+    el.appendChild(d);
+  }
+  $("#serverCount").textContent = `${groups.length} ${LANG === 'fa' ? 'کشور' : 'countries'}`;
+}
+
+function selectCountry(x) {
+  S.sel = x.bestLink; S.selCc = x.cc; S.selBestPing = x.bestPing;
+  renderHero(); renderList(); updateConnect();
+}
+
+// انتخابِ یک لینکِ مشخص (برای test_all/connect_best)
+function selectServer(link) {
+  S.sel = link;
+  const r = S.rows.find(x => x.link === link);
+  if (r) { S.selCc = countryOf(r); S.selBestPing = r.ping; }
+  renderHero(); renderList(); updateConnect();
+}
+
+// ---------- اتصال ----------
+// اتصالِ واقعی با رعایتِ حالت (پراکسی / TUN / گیم). قبلاً Fragment و Routing
+// مستقیم connect صدا می‌زدند و کاربر را بی‌خبر از TUN می‌انداختند بیرون.
+async function doConnect(link) {
+  const mode = connMode();
+  if (mode === "tun" || mode === "game") {
+    status(t(mode === "game" ? "game_starting" : "tun_starting"));
+    await call("connect_tun", { link, game: mode === "game", bypass: bypassNow(),
+      boost: mode === "game", gameExe: localStorage.getItem("game_exe") || "" });
+    status(t(mode === "game" ? "game_connected" : "tun_connected"));
+  } else {
+    await call("connect", { link, fragment: $("#swFragment").checked, bypass: bypassNow() });
+    status(t("connected_lbl"));
+  }
+}
+
+// وصل‌شدنِ دوباره با تنظیماتِ جدید (تعویضِ Fragment یا Routing وسطِ اتصال)
+async function reconnectCurrent() {
+  if (!S.connected || !S.sel || S.sel === "__relay__") return;
+  S.busy = true; updateConnect(); renderHero();
+  try {
+    await doConnect(S.sel);
+    S.connectedAt = Date.now(); S.exitInfo = null;
+    call("exit_info").then(info => {
+      if (S.connected && info && info.country) { S.exitInfo = info; renderHero(); }
+    }).catch(() => {});
+  } catch (e) {
+    S.connected = false; S.connectedAt = null;
+    status(t("failed") + " " + e);
+  }
+  S.busy = false; updateConnect(); renderHero();
+}
+
+function updateConnect() {
+  const b = $("#connectBtn"), l = $("#connectLabel");
+  b.classList.remove("connected","busy","idle","notready");
+  if (S.busy){ b.classList.add("busy"); l.textContent=t("connecting"); b.title = t("cancel_hint"); }
+  else if (S.connected){ b.classList.add("connected"); l.textContent=t("connected_lbl"); }
+  else if (S.sel){ b.classList.add("notready"); l.textContent=t("connect"); }
+  else { b.classList.add("idle"); l.textContent=t("pickfirst"); }
+  const bd = $("#badge");
+  bd.classList.toggle("on", S.connected);
+  $("#badgeText").textContent = S.connected ? t("on") : t("off");
+}
+
+// لینک‌های بیرونی را در مرورگرِ سیستم باز کن
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a.lnk");
+  if (!a) return;
+  e.preventDefault();
+  const url = a.getAttribute("href");
+  if (TAURI) call("open_url", { url }); else window.open(url, "_blank");
+});
+
+async function toggleConnect() {
+  // اگر در حالِ اتصال است، این کلیک یعنی «کنسل» (دیگر زردِ گیرکرده نداریم)
+  if (S.busy) {
+    try { await call("cancel_connect"); } catch (e) {}
+    try { await call("disconnect"); } catch (e) {}
+    S.busy = false; S.connected = false; S.connectedAt = null; S.exitInfo = null;
+    status(t("cancelled")); updateConnect(); renderHero();
+    return;
+  }
+  if (!S.connected && !S.sel) return;
+  S.busy = true; updateConnect(); status(t("please_wait"));
+  try {
+    if (S.connected) {
+      await call("disconnect"); S.connected = false; S.connectedAt = null; S.exitInfo = null; status(t("disconnect")); renderHero();
+    } else {
+      await doConnect(S.sel);
+      S.connected = true; S.connectedAt = Date.now(); S.exitInfo = null; renderHero();
+      call("exit_info").then(info => {
+        if (S.connected && info && info.country) { S.exitInfo = info; renderHero(); }
+      }).catch(() => {});
+    }
+  } catch (e) { status(t("failed") + " " + e); }
+  S.busy = false; updateConnect();
+}
+$("#connectBtn").onclick = toggleConnect;
+
+// ---------- دکمه‌ها ----------
+// 
+//  تطبیقِ نت — «شبیه‌ساز»
+//  گیت‌هاب هر کانفیگِ تأییدشده را برچسب زده (manifest.json: پروتکل، پورت،
+//  transport، REALITY، پشتِ CDN بودن، UDP لازم است یا نه). اینجا آن برچسب‌ها
+//  را با نتیجه‌ی تحلیلِ نتِ خودت تطبیق می‌دهیم و کانفیگ‌های بی‌فایده را از تست
+//  کنار می‌گذاریم — به‌جای تستِ ۴۰۰ کانفیگ، ۳۰ تا. این همان چیزی است که
+//  دیتای تو را می‌خورد.
+//  صادقانه: گیت‌هاب فیلترینگِ ایران را نمی‌بیند (سرورش بیرون است)، پس نمی‌تواند
+//  بگوید کدام از داخلِ ایران باز می‌شود؛ ولی این تطبیق ۹۰٪ گزینه‌های محکوم‌به‌شکست
+//  را حذف می‌کند.
+// 
+const MANIFEST_URL = "https://raw.githubusercontent.com/mrt0p0l/config-cloud/main/manifest.json";
+let MANIFEST = null;
+
+function netProbe() {
+  try { return JSON.parse(localStorage.getItem("netprobe") || "null"); } catch (e) { return null; }
+}
+
+// امتیازِ تناسبِ یک کانفیگ با نتِ کاربر (بزرگ‌تر = بهتر). null یعنی اصلاً نمی‌ارزد.
+function fitScore(f, probe) {
+  if (!probe) return 0;
+  let s = 0;
+  // hysteria2/tuic روی UDP کار می‌کنند — اگر UDP بسته است، محکوم به شکست‌اند
+  if (f.udp) {
+ if (probe.quic) s += 40; // QUIC باز بهترین گزینه (کم‌پینگ، ضدِ پکت‌لاس)
+ else if (probe.udp_dns) s += 5; // UDP نیمه‌باز شاید
+ else return null; // UDP بسته اصلاً تستش نکن
+  }
+ // فیلترینگ روی SNI REALITY جواب می‌دهد، TLSِ ساده معمولاً نه
+  if (probe.sni_block) { if (f.re) s += 30; else if (f.tls) s -= 15; }
+  else if (f.re) s += 8;
+  // اگر IPهای کلادفلر مستقیم جواب می‌دهند، کانفیگ‌های پشتِ CDN روی این نت خوب‌اند
+  if (f.cdn) s += probe.cdn_ok ? 22 : -8;
+  // پورت‌هایی که روی نتِ کاربر واقعاً باز دیده شده‌اند
+  const ports = probe.ports || [];
+  if (ports.length) s += ports.includes(f.p) ? 15 : -10;
+  // تأخیرِ اندازه‌گیری‌شده‌ی گیت‌هاب (کم‌تر بهتر)
+  if (typeof f.ms === "number") s += Math.max(0, 25 - f.ms / 20);
+  return s;
+}
+
+async function loadManifest() {
+  if (MANIFEST) return MANIFEST;
+  try {
+    const r = await fetch(MANIFEST_URL, { cache: "no-store" });
+    const j = await r.json();
+    MANIFEST = new Map((j.configs || []).map(c => [c.u, c]));
+  } catch (e) { MANIFEST = new Map(); }
+  return MANIFEST;
+}
+
+// از میانِ ردیف‌ها فقط آن‌هایی را برمی‌گرداند که به نتِ کاربر می‌خورند
+async function pickForMyNet(rows, cap) {
+  const probe = netProbe();
+  if (!probe) return null;                       // هنوز تحلیل نکرده — همه را تست کن
+  const man = await loadManifest();
+  if (!man.size) return null;
+  const scored = [];
+  for (const r of rows) {
+    const f = man.get(String(r.link).split("#")[0]);
+    if (!f) continue;                            // در manifest نیست (کانفیگِ دستیِ خودت)
+    const sc = fitScore(f, probe);
+    if (sc === null) continue;                   // محکوم به شکست روی این نت
+    scored.push([sc, r]);
+  }
+  if (scored.length < 8) return null;            // داده کم است — سخت‌گیری نکن
+  scored.sort((a, b) => b[0] - a[0]);
+  return scored.slice(0, cap).map(x => x[1]);
+}
+
+$("#btnTest").onclick = async () => {
+  // تست دانه‌دانه انجام می‌شود، پس همین دکمه وسطِ کار «توقف» می‌شود
+  if (S.testing) {
+    try { await call("cancel_connect"); } catch (e) {}
+    status(t("test_stopped"));
+    return;
+  }
+  const all = S.rows.filter(r => r.link !== "__relay__");
+  if (!all.length) { status(LANG==='fa'?"سروری برای تست نیست":"No servers"); return; }
+  S.testing = true; $("#btnTest").textContent = t("stop_test");
+  // فقط کانفیگ‌هایی که به نتِ خودت می‌خورند (صرفه‌جویی در دیتا) — اگر تحلیلِ نت
+  // نداریم یا manifest نیامد، به حالتِ قدیمی (همه) برمی‌گردیم.
+  status(t("matching_net"));
+  const picked = await pickForMyNet(all, 90);
+  const cfgs = picked || all;
+  if (picked) status(t("matched_n").replace("{n}", picked.length).replace("{all}", all.length));
+  S.testLinks = cfgs.map(r => r.link);
+  cfgs.forEach(r => r.ping = null); // در حال تست
+  renderList();
+  status(LANG==='fa'?"در حال تست… (نتایج زنده می‌آیند)":"Testing… (live results)");
+  let pings = [];
+  try { pings = await call("test_all", { links: S.testLinks }); }
+  catch (e) { status(t("failed") + " " + e); }
+  finally { S.testing = false; $("#btnTest").textContent = t("testAll"); }
+  // نهایی (اگر eventی جا ماند)
+  cfgs.forEach((r, i) => { if (r.ping == null) r.ping = (pings[i] ?? -1); });
+  rememberWorking(cfgs.filter(r => r.ping >= 0).map(r => r.link));
+  renderList(); if (S.sel) selectServer(S.sel);
+  const ok = cfgs.filter(r => r.ping >= 0).length;
+  status((LANG==='fa'?`تست تمام شد — ${ok} سرورِ کارآمد برای `:`Done — ${ok} working for `) + (localizeIsp(S.isp) || "?"));
+};
+$("#btnRefresh").onclick = () => loadServers();
+$("#btnBest").onclick = () => {
+  const best = S.rows.filter(r=>r.link!=="__relay__"&&r.ping>=0).sort((a,b)=>a.ping-b.ping)[0];
+  if(best){ selectServer(best.link); toggleConnect(); } else status(t("run_test_first"));
+};
+$("#btnOnlyWorking").onclick = (e) => {
+  S.onlyWorking = !S.onlyWorking;
+  e.target.classList.toggle("on", S.onlyWorking); renderList();
+};
+$("#search").oninput = (e) => { S.filter = e.target.value.trim().toLowerCase(); renderList(); };
+
+$("#swFragment").onchange = async e => {
+  status(e.target.checked ? t("frag_on") : t("frag_off"));
+  // Fragment فقط در حالتِ پراکسی (هسته‌ی xray) معنا دارد
+  if (connMode() !== "proxy") { status(t("frag_proxy_only")); return; }
+  if (S.connected && S.sel) await reconnectCurrent();   // با رعایتِ حالت
+};
+
+// ---------- کانفیگِ من ----------
+let manual = [], subs = [];
+try { manual = JSON.parse(localStorage.getItem("manual") || "[]"); } catch(e){}
+try { subs = JSON.parse(localStorage.getItem("subs") || "[]"); } catch(e){}
+function saveMine(){ try { localStorage.setItem("manual", JSON.stringify(manual)); localStorage.setItem("subs", JSON.stringify(subs)); } catch(e){} }
+$("#mcAdd").onclick = () => {
+  const t = $("#mcBox").value.split("\n").map(x=>x.trim()).filter(x=>x.includes("://"));
+  t.forEach(x=>{ if(!manual.includes(x)) manual.push(x); });
+  $("#mcBox").value=""; saveMine(); renderMini(); status(`${added} ${t("mc_add")}`);
+};
+$("#subAdd").onclick = () => {
+  const u = $("#subEntry").value.trim(); if(u&&!subs.includes(u)){subs.push(u);$("#subEntry").value="";saveMine();renderMini();status(t("sub_added"));}
+};
+function renderMini() {
+  const m = $("#mcList"); m.innerHTML = manual.length ? "" : `<div class="empty">${esc(t("mc_empty"))}</div>`;
+  manual.forEach((l,i)=>{ const d=document.createElement("div");d.className="mini";
+ d.innerHTML=`<button class="x"></button><span>${esc(l.slice(0,54))}</span>`;
+    d.querySelector(".x").onclick=()=>{manual.splice(i,1);saveMine();renderMini();loadServers();}; m.appendChild(d); });
+  const s = $("#subList"); s.innerHTML = subs.length ? "" : `<div class="empty">${esc(t("sub_empty"))}</div>`;
+  subs.forEach((u,i)=>{ const d=document.createElement("div");d.className="mini";
+ d.innerHTML=`<button class="x"></button><span>${esc(u)}</span>`;
+    d.querySelector(".x").onclick=()=>{subs.splice(i,1);saveMine();renderMini();}; s.appendChild(d); });
+}
+
+// ---------- بلک‌اوت (ویزاردِ راه‌اندازی + رله‌ی جدا) ----------
+let WORKER_TPL = "", GAS_TPL = "", relayCfg = null, relayOn = false;
+
+async function loadRelayTemplates() {
+  try { WORKER_TPL = await (await fetch("relay/worker.js")).text(); } catch(e){ WORKER_TPL = "// worker.js پیدا نشد"; }
+  try { GAS_TPL = await (await fetch("relay/Code.gs")).text(); } catch(e){ GAS_TPL = "// Code.gs پیدا نشد"; }
+  regenRelay();
+}
+function regenRelay() {
+  const key = $("#wzKey").value.trim();
+  const wk  = $("#wzWorker").value.trim();
+  $("#workerCode").textContent = WORKER_TPL.replace(
+    'const WORKER_URL = "myworker.workers.dev";',
+    `const WORKER_URL = "${wk || "myworker.workers.dev"}";`);
+  if (key && wk) {
+    $("#gasCode").textContent = GAS_TPL
+      .replace('const AUTH_KEY = "STRONG_SECRET_KEY";', `const AUTH_KEY = "${key}";`)
+      .replace('const WORKER_URL = "https://example.workers.dev";', `const WORKER_URL = "https://${wk}";`);
+  } else {
+    $("#gasCode").textContent = t("gas_fill_first");
+  }
+}
+["wzKey","wzWorker"].forEach(id => $("#"+id).addEventListener("input", regenRelay));
+
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); status(t("copied")); }
+  catch(e){ status(t("copy_fail")); }
+}
+$("#copyWorker").onclick = () => copyText($("#workerCode").textContent);
+$("#copyGas").onclick   = () => copyText($("#gasCode").textContent);
+
+function relayReady(cfg) {
+  relayCfg = cfg;
+  $("#relayConnect").disabled = false;
+  $("#relayState").textContent = t("relay_ready"); $("#relayHint").textContent = t("relay_press");
+  $("#relayHint").textContent = t("relay_press");
+}
+$("#wzSave").onclick = () => {
+  const key = $("#wzKey").value.trim(), wk = $("#wzWorker").value.trim(), sid = $("#wzScript").value.trim();
+  if (!key || !sid) { status(t("need_key_sid")); return; }
+  const cfg = { auth_key:key, worker:wk, script_ids:[sid] };
+  localStorage.setItem("relayCfg", JSON.stringify(cfg));
+  relayReady(cfg);
+  status(t("relay_saved"));
+};
+// وضعیتِ دکمه‌ی رله را با واقعیت هماهنگ می‌کند
+function paintRelay() {
+  const b = $("#relayConnect");
+  b.classList.toggle("on", relayOn);
+  b.textContent = relayOn ? t("relay_disconnect") : t("relay_connect");
+  $("#relayState").textContent = relayOn ? t("relay_on") : (relayCfg ? t("relay_ready") : t("relay_state0"));
+  $("#relayHint").textContent = relayOn ? t("relay_on_hint") : (relayCfg ? t("relay_press") : t("relay_hint0"));
+}
+
+$("#relayConnect").onclick = async () => {
+  if (!relayCfg || S.busy) return;
+  const b = $("#relayConnect");
+  b.disabled = true; S.busy = true; updateConnect();
+  try {
+    if (relayOn) {
+      await call("disconnect");
+      relayOn = false; S.connected = false; S.connectedAt = null; S.exitInfo = null;
+      status(t("relay_conn_off"));
+    } else {
+      // رله چند ثانیه طول می‌کشد (ساختِ گواهی + پیدا کردنِ IP گوگل)
+      status(t("relay_starting"));
+      await call("connect_relay", {
+        authKey: relayCfg.auth_key,
+        scriptIds: relayCfg.script_ids || [],
+      });
+      relayOn = true;
+      S.connected = true; S.connectedAt = Date.now(); S.sel = "__relay__"; S.selCc = "";
+      status(t("relay_conn_ok"));
+      call("exit_info").then(info => {
+        if (S.connected && info && info.country) { S.exitInfo = info; renderHero(); }
+      }).catch(() => {});
+    }
+  } catch (e) {
+    relayOn = false; S.connected = false; S.connectedAt = null;
+    status(t("failed") + " " + e);
+  }
+  S.busy = false; b.disabled = false;
+  paintRelay(); updateConnect(); renderHero();
+};
+try {
+  const s = localStorage.getItem("relayCfg");
+  if (s) { const c = JSON.parse(s);
+    $("#wzKey").value = c.auth_key||""; $("#wzWorker").value = c.worker||"";
+    $("#wzScript").value = (c.script_ids||[])[0]||""; relayReady(c); }
+} catch(e){}
+loadRelayTemplates();
+
+// ---------- لاگِ پشت‌صحنه ----------
+let logTimer = null;
+async function refreshLog() {
+  try {
+    const lines = await call("get_log");
+    const pre = $("#logPre");
+    pre.textContent = (lines && lines.length) ? lines.join("\n") : t("log_empty");
+    pre.scrollTop = pre.scrollHeight;
+  } catch (e) {}
+}
+function openLog() {
+  $("#logModal").classList.add("open");
+  refreshLog();
+  logTimer = setInterval(refreshLog, 1500);
+}
+$("#logClose").onclick = () => {
+  $("#logModal").classList.remove("open");
+  if (logTimer) { clearInterval(logTimer); logTimer = null; }
+};
+$("#logModal").onclick = (e) => { if (e.target.id === "logModal") $("#logClose").click(); };
+
+// ---------- شروع ----------
+function status(t){ $("#status").textContent = t; }
+async function loadServers() {
+  status(t("fetching_servers"));
+  try { S.rows = await call("list_servers", { subs: subs || [], manual: manual || [], game: connMode() === "game" }); }
+  catch (e) { S.rows = []; status(t("fetch_fail") + " " + e); return; }
+  renderList();
+  status(`${S.rows.length} ${t("servers_word")} — ${t("press_test")}`);
+}
+$("#routeSel").onchange = async () => {
+  localStorage.setItem("route", $("#routeSel").value);
+  const on = $("#routeSel").value === "bypass";
+  status(t("route_lbl") + " " + (on ? t("route_bypass") : t("route_global")));
+  await reconnectCurrent();   // با رعایتِ حالت (TUN/گیم از TUN بیرون نمی‌افتد)
+};
+// تعویضِ حالتِ اتصال (پراکسی / TUN / گیم) — اگر وصل بودیم، قطع کن تا کاربر با حالتِ جدید دوباره وصل شود
+$("#modeSel").onchange = async () => {
+  localStorage.setItem("mode", $("#modeSel").value);
+  updateModeHint();
+  const m = connMode();
+  status(m === "tun" ? t("mode_tun") : m === "game" ? t("mode_game") : t("mode_proxy"));
+  if (S.connected) {
+    S.busy = true; updateConnect();
+    try { await call("disconnect"); } catch (e) {}
+    S.connected = false; S.connectedAt = null; S.exitInfo = null;
+    S.busy = false; updateConnect(); renderHero();
+  }
+ // حالتِ گیم لیستِ مخصوصِ گیم (کم‌پینگ/کم‌جیتر) را می‌گیرد لیست را تازه کن
+  loadServers();
+};
+// ---------- تحلیل‌گرِ نت ----------
+function anRow(ok, label, good, bad) {
+ const mark = ok ?"":"";
+  return `<div class="an-row"><span class="an-k">${mark} ${esc(label)}</span>` +
+         `<span class="an-v ${ok ? 'ok' : 'no'}">${esc(ok ? good : bad)}</span></div>`;
+}
+$("#btnAnalyze").onclick = async () => {
+  $("#anModal").classList.add("open");
+  $("#anBody").innerHTML = `<div class="an-wait">${esc(t("an_running"))}</div>`;
+  try {
+    const p = await call("analyze_net");
+    const yes = t("an_yes"), no = t("an_no");
+    let h = "";
+    h += anRow(p.udp_dns, t("an_udp"), yes, no);
+    h += anRow(p.quic, t("an_quic"), yes, no);
+    h += anRow(!p.sni_block, t("an_sni"), t("an_clean"), t("an_dpi"));
+    h += anRow(!p.dns_poison, t("an_dns"), t("an_clean"), t("an_poisoned"));
+    h += anRow(p.cdn_ok, t("an_cdn"), yes, no);
+    h += anRow((p.ports || []).length > 0, t("an_ports"), (p.ports || []).join(LANG === "fa" ? "، " : ", ") || "—", "—");
+    const tips = String(p.advice || "").split(",").filter(Boolean).map(k => t("adv_" + k)).filter(Boolean);
+    if (tips.length) {
+      h += `<div class="an-advice"><b>${esc(t("an_advice"))}</b><br>• ${tips.map(esc).join("<br>• ")}</div>`;
+    }
+    $("#anBody").innerHTML = h;
+    // نتیجه را نگه دار تا انتخابِ کانفیگ هوشمندتر شود (و بعداً به گیت‌هاب برود)
+    try { localStorage.setItem("netprobe", JSON.stringify(p)); } catch (e) {}
+  } catch (e) {
+    $("#anBody").innerHTML = `<div class="an-wait">${esc(t("failed") + " " + e)}</div>`;
+  }
+};
+$("#anClose").onclick = () => $("#anModal").classList.remove("open");
+
+// اسمِ فایلِ اجراییِ بازی (اختیاری) — برای بالا بردنِ اولویتش در گیم‌مود
+const gameExeInp = $("#gameExe");
+if (gameExeInp) gameExeInp.oninput = () => localStorage.setItem("game_exe", gameExeInp.value.trim());
+// نتایجِ زنده‌ی تست (event از Rust)
+if (TAURI && window.__TAURI__.event) {
+  window.__TAURI__.event.listen("test_result", (e) => {
+    const [i, ping] = e.payload || [];
+    const link = S.testLinks && S.testLinks[i];
+    if (!link) return;
+    const r = S.rows.find(x => x.link === link);
+    if (r) { r.ping = ping; scheduleRender(); }
+  });
+}
+applyLang();
+loadServers(); renderMini(); updateConnect(); detectNet();
+
+// تحلیلِ نت را یک‌بار در روز خودکار بگیر (چند کیلوبایت) تا تطبیقِ کانفیگ کار کند
+// و «تست همه» به‌جای صدها کانفیگ، فقط مناسب‌های نتِ تو را تست کند.
+(async () => {
+  if (!TAURI) return;
+  const last = Number(localStorage.getItem("netprobe_at") || 0);
+  if (Date.now() - last < 24 * 3600 * 1000 && netProbe()) return;
+  try {
+    const p = await call("analyze_net");
+    if (p) { localStorage.setItem("netprobe", JSON.stringify(p)); localStorage.setItem("netprobe_at", String(Date.now())); }
+  } catch (e) {}
+})();
+
+// همگام‌سازیِ وضعیت با هسته: اگر تونل پشتِ صحنه افتاد (و Kill Switch هم نتوانست
+// برش گرداند)، رابط دیگر دروغ نمی‌گوید و «متصل» را برمی‌دارد.
+setInterval(async () => {
+  if (!TAURI || S.busy) return;
+  try {
+    const on = await call("is_connected");
+    if (on !== S.connected) {
+      S.connected = on;
+      if (!on) { S.connectedAt = null; S.exitInfo = null; status(t("conn_lost")); }
+      updateConnect(); renderHero();
+    }
+  } catch (e) {}
+}, 3000);
+
+
+// ---------- تنظیمات (تم + زبان + لاگ) ----------
+function paintLangSeg(){
+  document.querySelectorAll("#langSeg .seg-b").forEach(b =>
+    b.classList.toggle("on", b.getAttribute("data-lang") === LANG));
+}
+$("#setBtn").onclick = () => { renderThemeGrid(); paintLangSeg(); $("#setModal").classList.add("open"); };
+$("#setClose").onclick = () => $("#setModal").classList.remove("open");
+$("#setModal").onclick = (e) => { if (e.target.id === "setModal") $("#setClose").click(); };
+document.querySelectorAll("#langSeg .seg-b").forEach(b => b.onclick = () => {
+  LANG = b.getAttribute("data-lang");
+  localStorage.setItem("lang", LANG);
+  applyLang(); paintLangSeg(); renderThemeGrid();
+});
+$("#openLog").onclick = () => { $("#setModal").classList.remove("open"); openLog(); };

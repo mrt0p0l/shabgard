@@ -1,0 +1,19 @@
+# Build artifacts
+src-tauri/target/
+node_modules/
+dist/
+
+# Bundled cores — downloaded at install time (see installer-hooks.nsh)
+src-tauri/binaries/*.exe
+src-tauri/binaries/*.dll
+src-tauri/binaries/geoip.dat
+
+# Local dev junk
+*.log
+.DS_Store
+Thumbs.db
+ui/app.js.bak
+*.pre-*
+ui/styles.css.bak
+.claude/
+*.bak

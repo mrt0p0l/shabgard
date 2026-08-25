@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>شبگرد</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<svg class="sprite" aria-hidden="true">
+ <symbol id="ic-power" viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.6 6.6a8 8 0 1 0 10.8 0"/></symbol>
+ <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></symbol>
+ <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></symbol>
+ <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6Z"/></symbol>
+ <symbol id="ic-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7Z"/></symbol>
+ <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 4v5h-5"/></symbol>
+ <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+ <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+ <symbol id="ic-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h2.5"/></symbol>
+ <symbol id="ic-gamepad" viewBox="0 0 24 24"><path d="M6 11h4M8 9v4"/><circle cx="16" cy="10.5" r="1"/><circle cx="18.5" cy="13" r="1"/><rect x="2" y="6" width="20" height="12" rx="5"/></symbol>
+ <symbol id="ic-terminal" viewBox="0 0 24 24"><path d="m5 8 4 4-4 4M12 16h7"/></symbol>
+ <symbol id="ic-lang" viewBox="0 0 24 24"><path d="M3 6h11M8 4v2c0 4-2.5 7-5 8"/><path d="M9 11c1.5 3 4 5 6 6"/><path d="m13 20 4-9 4 9M14.5 17h5"/></symbol>
+ <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+ <symbol id="ic-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+ <symbol id="ic-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+ <symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.9 14.6a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.2v.2a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.8-1.2l-.1.1A2 2 0 1 1 4.9 16.5l.1-.1a1.6 1.6 0 0 0-1.2-2.7h-.2a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 5 7l-.1-.1A2 2 0 1 1 7.7 4l.1.1a1.6 1.6 0 0 0 2.7-1.2v-.2a2 2 0 1 1 4 0v.1A1.6 1.6 0 0 0 17.2 4l.1-.1A2 2 0 1 1 20.1 6.8l-.1.1a1.6 1.6 0 0 0 1.2 2.7h.2a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.4 1Z"/></symbol>
+ <symbol id="ic-min" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+ <symbol id="ic-max" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1.5"/></symbol>
+ <symbol id="ic-restore" viewBox="0 0 24 24"><rect x="8" y="4" width="12" height="12" rx="1.5"/><path d="M16 16v3a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V9.5A1.5 1.5 0 0 1 5 8h3"/></symbol>
+ <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+ <symbol id="ic-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+ <symbol id="ic-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.6 18a2 2 0 0 0 1.7 3h11.4a2 2 0 0 0 1.7-3L14 9V3"/><path d="M7.5 15h9"/></symbol>
+ <symbol id="ic-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.1 0-1 .8-1.7 1.7-1.7H16A5 5 0 0 0 21 10c0-3.9-4-7-9-7Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7.5" r="1"/><circle cx="15" cy="8" r="1"/></symbol>
+ <symbol id="ic-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+ <symbol id="ic-alert" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></symbol>
+</svg>
+<div class="app">
+
+  <!-- Title bar -->
+  <header class="titlebar" data-tauri-drag-region>
+    <div class="brand"><svg class="ic lg"><use href="#ic-moon"/></svg><span data-i18n="brand">شبگرد</span></div>
+    <div class="tbar-left">
+      <button class="icon-btn" id="setBtn" title="Settings"><svg class="ic"><use href="#ic-gear"/></svg></button>
+      <div class="badge" id="badge"><span class="dot"></span><span id="badgeText" data-i18n="off">قطع</span></div>
+      <div class="wnd">
+        <button class="wnd-b" id="wMin" title="Minimize"><svg class="ic"><use href="#ic-min"/></svg></button>
+        <button class="wnd-b" id="wMax" title="Maximize"><svg class="ic"><use href="#ic-max"/></svg></button>
+        <button class="wnd-b close" id="wClose" title="Close"><svg class="ic"><use href="#ic-x"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ISP picker modal -->
+  <div class="modal" id="ispModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <button class="modal-x" id="ispClose"><svg class="ic"><use href="#ic-x"/></svg></button>
+        <svg class="ic"><use href="#ic-globe"/></svg><span data-i18n="isp_pick">نتِ خودت را انتخاب کن</span>
+      </div>
+      <div class="isp-hint" data-i18n="isp_pick_hint">تشخیصِ خودکار گاهی اشتباه می‌کند (مثلاً سامانتل روی خطِ رایتل است). نتِ درستت را بزن:</div>
+      <div class="isp-grid" id="ispGrid"></div>
+    </div>
+  </div>
+
+
+  <!-- Settings modal -->
+  <div class="modal" id="setModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <button class="modal-x" id="setClose"><svg class="ic"><use href="#ic-x"/></svg></button>
+        <svg class="ic"><use href="#ic-gear"/></svg><span data-i18n="set_title">تنظیمات</span>
+      </div>
+      <div class="set-body">
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-palette"/></svg><span data-i18n="set_theme">ظاهر</span></div>
+          <div class="theme-grid" id="themeGrid"></div>
+        </div>
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-shield"/></svg><span data-i18n="set_apps">اپ‌های ویندوز</span></div>
+          <div class="set-note" data-i18n="uwp_note">اپ‌های Microsoft Store داخلِ قفلِ ویندوزند و به پراکسیِ محلی وصل نمی‌شوند. یک‌بار این را بزن تا باز شوند (نیاز به ادمین).</div>
+          <button class="btn" id="btnUwp"><svg class="ic"><use href="#ic-shield"/></svg><span data-i18n="uwp_fix">بازکردنِ اپ‌های ویندوز</span></button>
+        </div>
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-power"/></svg><span data-i18n="set_start">شروعِ خودکار</span></div>
+          <label class="switch set-sw"><input type="checkbox" id="swAutostart"><span class="track"></span>
+            <span class="lbl" data-i18n="set_start_lbl">با روشن شدنِ ویندوز اجرا شود (در سینی)</span></label>
+        </div>
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-lang"/></svg><span data-i18n="set_lang">زبان</span></div>
+          <div class="seg" id="langSeg">
+            <button class="seg-b" data-lang="en">English</button>
+            <button class="seg-b" data-lang="fa">فارسی</button>
+          </div>
+        </div>
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-terminal"/></svg><span data-i18n="log_title">لاگِ پشت‌صحنه</span></div>
+          <button class="btn" id="openLog"><svg class="ic"><use href="#ic-terminal"/></svg><span data-i18n="set_openlog">نمایشِ لاگ</span></button>
+        </div>
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-shield"/></svg><span data-i18n="priv_title">حریم خصوصی</span></div>
+          <div class="set-note" data-i18n="priv_note">شبگرد هیچ اطلاعاتی برای هیچ سروری نمی‌فرستد — بدون حساب، بدون ثبت‌نام، بدون آنالیتیکس. تنها رَدهای روی همین کامپیوتر: سابقهٔ فعالیت (کدام سایت‌ها باز شده) و فایل‌های موقت. با یک کلیک همه پاک می‌شوند.</div>
+          <button class="btn" id="btnWipe"><svg class="ic"><use href="#ic-x"/></svg><span data-i18n="priv_wipe">پاک‌کردنِ داده‌های من</span></button>
+        </div>
+        <div class="set-sec">
+          <div class="set-h"><svg class="ic"><use href="#ic-refresh"/></svg><span data-i18n="upd_title">به‌روزرسانی</span></div>
+          <div class="set-note" id="updNote">…</div>
+          <button class="btn primary" id="btnUpdate" style="display:none"><svg class="ic"><use href="#ic-down"/></svg><span data-i18n="upd_install">دانلود و نصب</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log modal (backstage) -->
+  <div class="modal" id="logModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <button class="modal-x" id="logClose"><svg class="ic"><use href="#ic-x"/></svg></button>
+        <svg class="ic"><use href="#ic-terminal"/></svg><span data-i18n="log_title">لاگِ پشت‌صحنه</span>
+      </div>
+      <pre class="log-pre" id="logPre">—</pre>
+    </div>
+  </div>
+
+  <!-- Network analyzer modal -->
+  <div class="modal" id="anModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <button class="modal-x" id="anClose"><svg class="ic"><use href="#ic-x"/></svg></button>
+        <svg class="ic"><use href="#ic-flask"/></svg><span data-i18n="an_title">تحلیلِ نت</span>
+      </div>
+      <div class="isp-hint" data-i18n="an_hint">می‌فهمد نتِ تو چطور فیلتر شده و چه نوع کانفیگی رویش بهتر کار می‌کند.</div>
+      <div id="anBody" class="an-body"></div>
+    </div>
+  </div>
+
+  <!-- QR modal — کانفیگِ روز برای موبایل -->
+  <div class="modal" id="qrModal">
+    <div class="modal-box qr-box">
+      <div class="modal-head">
+        <button class="modal-x" id="qrClose"><svg class="ic"><use href="#ic-x"/></svg></button>
+        <svg class="ic"><use href="#ic-copy"/></svg><span data-i18n="qr_title">کانفیگِ روز — اسکن با موبایل</span>
+      </div>
+      <div class="qr-body">
+        <canvas id="qrCanvas" width="280" height="280"></canvas>
+        <p class="hint" data-i18n="qr_hint">با دوربینِ گوشی بخوان تا سرورهای برترِ امروز به آن برسد. (اگر چند لینک است، اولین لینک در QR است — بقیه با دکمهٔ کپی)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="servers"><svg class="ic"><use href="#ic-globe"/></svg><span data-i18n="tab_servers">سرورها</span></button>
+    <button class="tab" data-tab="myconfig"><svg class="ic"><use href="#ic-plus"/></svg><span data-i18n="tab_myconfig">کانفیگِ من</span></button>
+    <button class="tab" data-tab="blackout"><svg class="ic"><use href="#ic-moon"/></svg><span data-i18n="tab_blackout">بلک‌اوت</span></button>
+  </nav>
+
+  <!-- ===== Servers tab ===== -->
+  <section class="panel active" id="tab-servers">
+
+    <div class="toolbar">
+      <div class="tools-left">
+        <button class="btn" id="btnTest"><svg class="ic"><use href="#ic-zap"/></svg><span data-i18n="testAll">تست همه</span></button>
+        <button class="btn icon-only" id="btnRefresh" title="Refresh"><svg class="ic"><use href="#ic-refresh"/></svg></button>
+        <button class="btn icon-only" id="btnDaily" title="Daily top-5" style="display:none"><svg class="ic"><use href="#ic-copy"/></svg></button>
+        <button class="btn icon-only" id="btnAnalyze" title="Analyze"><svg class="ic"><use href="#ic-flask"/></svg></button>
+        <button class="btn toggle" id="btnOnlyWorking"><svg class="ic"><use href="#ic-check"/></svg><span data-i18n="onlyWorking">فقط کارآمد</span></button>
+        <button class="btn" id="btnWarp" title="Cloudflare WARP"><svg class="ic"><use href="#ic-shield"/></svg><span data-i18n="warp_btn">WARP</span></button>
+        <button class="btn primary" id="btnBest"><svg class="ic"><use href="#ic-shield"/></svg><span data-i18n="best">اتصالِ خودکار به بهترین</span></button>
+      </div>
+    </div>
+
+    <div class="bento">
+      <!-- اتصال -->
+      <div class="tile tile-conn">
+        <div class="tile-h"><svg class="ic"><use href="#ic-power"/></svg><span data-i18n="t_conn">اتصال</span>
+          <span class="netbar" id="netbar"></span></div>
+        <div class="conn-row">
+          <button class="power idle" id="connectBtn" aria-label="Connect"><svg class="ic xl"><use href="#ic-power"/></svg></button>
+          <div class="conn-txt">
+            <div class="power-status" id="connectLabel">اتصال</div>
+            <div class="hero-name" id="heroName">سروری انتخاب نشده</div>
+            <div class="hero-sub" id="heroSub">یک سرور از لیست انتخاب کن</div>
+          </div>
+        </div>
+        <div class="fields">
+          <label class="field">
+            <span class="field-l"><svg class="ic"><use href="#ic-gamepad"/></svg><span id="modeLbl">حالت</span></span>
+            <span class="field-w">
+              <select id="modeSel" class="route-sel"></select>
+              <svg class="field-a" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </label>
+          <label class="field">
+            <span class="field-l"><svg class="ic"><use href="#ic-route"/></svg><span id="routeLbl">مسیریابی</span></span>
+            <span class="field-w">
+              <select id="routeSel" class="route-sel"></select>
+              <svg class="field-a" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </label>
+        </div>
+        <label class="switch"><input type="checkbox" id="swFragment"><span class="track"></span><span class="lbl">Fragment</span></label>
+        <div class="mode-hint" id="modeHint"></div>
+        <div class="game-exe-row" id="gameExeRow" style="display:none">
+          <input class="wz-in" id="gameExe" placeholder="cs2.exe / valorant.exe" />
+          <span class="game-exe-lbl" id="gameExeLbl"></span>
+        </div>
+      </div>
+
+      <!-- تأخیر + مصرفِ داده -->
+      <div class="tile tile-lat">
+        <div class="tile-h"><svg class="ic"><use href="#ic-chart"/></svg><span data-i18n="t_lat">تأخیر</span></div>
+        <div class="lat-big"><span id="latMs">—</span><small data-i18n="ms">ms</small></div>
+        <canvas id="pingSpark" width="180" height="34" style="width:100%;height:34px;margin-top:2px"></canvas>
+        <div class="lat-sub" id="latSub"></div>
+        <div class="bw">
+          <div class="bw-h"><span data-i18n="bw_now">مصرفِ لحظه‌ای</span>
+            <button class="bw-btn" id="bwTest" title="Speed test"><svg class="ic"><use href="#ic-zap"/></svg></button></div>
+          <div class="bw-line"><span class="bw-ic"><svg class="ic"><use href="#ic-down"/></svg></span>
+            <div class="bw-bar"><i id="bwDn"></i></div>
+            <b id="bwDnV">0</b><span class="bw-of" id="bwDnC"></span><small>Mb/s</small></div>
+          <div class="bw-line"><span class="bw-ic"><svg class="ic"><use href="#ic-up"/></svg></span>
+            <div class="bw-bar"><i id="bwUp"></i></div>
+            <b id="bwUpV">0</b><span class="bw-of" id="bwUpC"></span><small>Mb/s</small></div>
+          <div class="bw-cap" id="bwCap"></div>
+        </div>
+        <div class="usage-row">
+          <div class="u-item"><span class="u-lbl"><svg class="ic"><use href="#ic-up"/></svg><span data-i18n="up">آپلود</span></span><b id="upVal">0B</b></div>
+          <div class="u-item"><span class="u-lbl"><svg class="ic"><use href="#ic-down"/></svg><span data-i18n="down">دانلود</span></span><b id="downVal">0B</b></div>
+        </div>
+      </div>
+
+      <!-- سرورها -->
+      <div class="tile tile-srv">
+        <div class="tile-h"><svg class="ic"><use href="#ic-globe"/></svg><span data-i18n="t_srv">سرورها</span>
+          <input class="search tile-search" id="search" placeholder="..." />
+          <span class="tile-x" id="serverCount"></span></div>
+        <div class="list" id="serverList"></div>
+      </div>
+
+      <!-- فعالیتِ اینترنت -->
+      <div class="tile tile-act">
+        <div class="tile-h"><svg class="ic"><use href="#ic-terminal"/></svg><span data-i18n="t_act">فعالیتِ اینترنت</span></div>
+        <div class="act-list" id="actList"><div class="act-empty" data-i18n="act_empty">هنوز چیزی باز نشده</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== My Config tab ===== -->
+  <section class="panel" id="tab-myconfig">
+    <h2><svg class="ic lg"><use href="#ic-plus"/></svg><span data-i18n="mc_title">کانفیگِ خودت</span></h2>
+    <p class="hint"><span data-i18n="mc_hint">لینکِ کانفیگ‌ها را بگذار (هر خط یکی):</span> <code>vless://</code> <code>vmess://</code> <code>trojan://</code> <code>ss://</code> <code>hysteria2://</code> <code>tuic://</code><br><span data-i18n="mc_wg">یا کلِ کانفیگِ WireGuard را پیست کن (Windscribe / Proton — با اکانتِ خودت)</span></p>
+    <textarea id="mcBox" class="textarea" rows="4" placeholder="vless://…&#10;vmess://…"></textarea>
+    <div class="row-end"><button class="btn green" id="mcAdd"><svg class="ic"><use href="#ic-plus"/></svg><span data-i18n="mc_add">افزودن کانفیگ</span></button></div>
+
+    <h3 data-i18n="mc_added">کانفیگ‌های اضافه‌شده</h3>
+    <div class="minilist" id="mcList"></div>
+
+    <h3 data-i18n="subs_title">ساب‌ها (Subscription)</h3>
+    <div class="sub-row">
+      <input class="search grow" id="subEntry" placeholder="https://…/sub" />
+      <button class="btn primary" id="subAdd"><svg class="ic"><use href="#ic-plus"/></svg><span data-i18n="sub_add">افزودن ساب</span></button>
+    </div>
+    <div class="minilist" id="subList"></div>
+
+    <h3><svg class="ic"><use href="#ic-gamepad"/></svg><span data-i18n="pa_title">کنترلِ برنامه‌ها (حالتِ TUN)</span></h3>
+    <p class="hint" data-i18n="pa_hint">برای هر برنامه بگو از تونل برود، مستقیم، یا بلاک شود. برنامه‌های در حال اجرا را می‌بینی — روی هرکدام حالت بگذار. برنامه‌های Store هم پشتیبانی می‌شوند.</p>
+    <div class="pa-row">
+      <button class="btn primary" id="paScan"><svg class="ic"><use href="#ic-search"/></svg><span data-i18n="pa_scan">برنامه‌های در حال اجرا</span></button>
+      <input class="search grow" id="paName" dir="ltr" placeholder="C:\...\app.exe یا app.exe" />
+      <select id="paMode">
+        <option value="p" data-i18n="pa_proxy">از تونل</option>
+        <option value="d" data-i18n="pa_direct">مستقیم</option>
+        <option value="b" data-i18n="pa_block">بلاک</option>
+      </select>
+      <button class="btn green" id="paAdd"><svg class="ic"><use href="#ic-plus"/></svg></button>
+    </div>
+    <!-- لیستِ برنامه‌های در حال اجرا (بعد از اسکن) -->
+    <div class="minilist pa-scan" id="paScanList" style="display:none"></div>
+    <div class="minilist" id="paList"></div>
+  </section>
+
+  <!-- ===== Blackout tab ===== -->
+  <section class="panel" id="tab-blackout">
+    <h2><svg class="ic lg"><use href="#ic-moon"/></svg><span data-i18n="bo_title">بلک‌اوت — رله‌ی شخصی</span></h2>
+    <p class="hint" data-i18n="bo_desc">وقتی اینترنت تقریباً قطع است، رله از مسیرِ گوگل + کلادفلر تونل می‌زند. یک‌بار طبقِ مراحل بساز، بعد آن را به‌عنوانِ یک VPNِ جدا روشن کن (جدا از لیستِ سرورها).</p>
+
+    <!-- Separate relay VPN connect -->
+    <div class="relay-connect">
+      <div class="relay-info">
+        <div class="relay-state" id="relayState" data-i18n="relay_state0">رله هنوز تنظیم نشده</div>
+        <div class="relay-hint" id="relayHint" data-i18n="relay_hint0">مراحلِ پایین را انجام بده</div>
+      </div>
+      <button class="btn-relay" id="relayConnect" data-i18n="relay_connect" disabled>اتصالِ رله</button>
+    </div>
+
+    <div class="wizard" id="wizard">
+      <div class="wz">
+        <div class="wz-num">1</div>
+        <div class="wz-body">
+          <b data-i18n="wz1_t">یک کلیدِ امن بساز</b> <span data-i18n="wz1_b">— هر رشته‌ای (این رمزِ بینِ گوگل و کلادفلرِ توست):</span>
+          <input class="wz-in" id="wzKey" placeholder="MyS3cret_912xQ" />
+        </div>
+      </div>
+
+      <div class="wz">
+        <div class="wz-num">2</div>
+        <div class="wz-body">
+          <b data-i18n="wz2_t">Cloudflare Worker بساز</b> <span data-i18n="wz2_a">— برو به</span> <a class="lnk" href="https://dash.cloudflare.com">dash.cloudflare.com</a> <span data-i18n="wz2_b">→ Workers &amp; Pages → Create → Worker. یک اسم بده؛ آدرسش می‌شود مثلِ</span> <code>myrelay.username.workers.dev</code><span data-i18n="wz2_c">. آن آدرس را اینجا بگذار:</span>
+          <input class="wz-in" id="wzWorker" placeholder="myrelay.username.workers.dev" />
+          <div class="code-head"><span data-i18n="wz2_code">کدِ Worker (این را داخلِ ادیتور پیست کن → Deploy)</span><button class="btn mini" id="copyWorker"><svg class="ic"><use href="#ic-copy"/></svg><span data-i18n="copy">کپی</span></button></div>
+          <pre class="code" id="workerCode">…</pre>
+        </div>
+      </div>
+
+      <div class="wz">
+        <div class="wz-num">3</div>
+        <div class="wz-body">
+          <b data-i18n="wz3_t">Google Apps Script بساز</b> <span data-i18n="wz3_a">— برو به</span> <a class="lnk" href="https://script.google.com/home/projects/create">script.google.com</a> <span data-i18n="wz3_b">→ New project. این کدِ آماده (با کلید و آدرسِ خودت پُر شده) را کپی و پیست کن:</span>
+          <div class="code-head"><span data-i18n="wz3_code">کدِ Code.gs (آماده)</span><button class="btn mini" id="copyGas"><svg class="ic"><use href="#ic-copy"/></svg><span data-i18n="copy">کپی</span></button></div>
+          <pre class="code" id="gasCode">…</pre>
+          <span data-i18n="wz3_deploy">سپس بالا سمتِ راست Deploy → New deployment → کنارِ «Select type» چرخ‌دنده → Web app → «Who has access» = Anyone → Deploy.</span>
+          <div class="oauth-note">
+            <svg class="ic"><use href="#ic-alert"/></svg><b data-i18n="oauth_t">گوگل یک هشدار نشان می‌دهد</b> <span data-i18n="oauth_b">(چون اپِ شخصیِ خودت است، کاملاً امن است). این مراحل را دنبال کن:</span>
+            <ol>
+              <li data-i18n="oauth_1">«Authorize access» → اکانتِ جیمیلت را انتخاب کن.</li>
+              <li data-i18n="oauth_2">صفحه‌ی «Google hasn't verified this app» → پایین «Advanced» را بزن.</li>
+              <li data-i18n="oauth_3">«Go to … (unsafe)» را بزن.</li>
+              <li data-i18n="oauth_4">در آخر «Continue» / «Allow» را بزن تا اجازه بدهی.</li>
+            </ol>
+          </div>
+          <span data-i18n="wz3_id">حالا آدرسی مثلِ …/macros/s/AKfyc…/exec می‌دهد؛ قسمتِ AKfyc… را اینجا بگذار:</span>
+          <input class="wz-in" id="wzScript" placeholder="AKfyc… (Script ID)" />
+        </div>
+      </div>
+
+      <div class="wz">
+        <div class="wz-num">4</div>
+        <div class="wz-body">
+          <b data-i18n="wz4_t">ذخیره و آماده‌سازی:</b>
+          <button class="btn green" id="wzSave"><svg class="ic"><use href="#ic-save"/></svg><span data-i18n="wz4_save">ذخیره کن</span></button>
+          <div class="muted" data-i18n="wz4_note" style="margin-top:6px">بعد از ذخیره، دکمه‌ی «اتصالِ رله» بالا فعال می‌شود.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Status bar -->
+  <footer class="statusbar">
+    <span id="status" data-i18n="ready">آماده</span>
+    <span id="connStats" class="conn-stats"></span>
+  </footer>
+</div>
+<script src="vendor/qrcode.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
