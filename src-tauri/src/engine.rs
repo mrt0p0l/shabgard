@@ -1842,7 +1842,24 @@ fn stop_tun(h: isize, stop_flag: &Option<PathBuf>) {
 // ==========================================================================
 const RELAY_PORT: u16 = 8085;
 
+// ── پورتابل: اگر کنارِ exe پوشهٔ «data» باشد (یا فایلِ portable.txt)، همهٔ داده‌ها
+// همان‌جا می‌روند — نه AppData، نه رجیستری. حذفِ پوشه = حذفِ کامل.
+// در حالتِ نصب‌شده مثل قبل %LOCALAPPDATA%\Shabgard استفاده می‌شود.
+pub fn portable_root() -> Option<PathBuf> {
+    let exe_dir = std::env::current_exe().ok()?.parent()?.to_path_buf();
+    // فایلِ نشانگر — حتی اگر کاربر پوشهٔ data را نداشته باشد، ساختنش پورتابل می‌کند
+    if exe_dir.join("portable.txt").exists() {
+        return Some(exe_dir);
+    }
+    None
+}
+
 pub fn app_data_dir() -> PathBuf {
+    if let Some(root) = portable_root() {
+        let d = root.join("data");
+        let _ = std::fs::create_dir_all(&d);
+        return d;
+    }
     let base = std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into());
     let d = PathBuf::from(base).join("Shabgard");  // مسیرِ لاتین: امن‌تر برای ابزارهای بیرونی
     let _ = std::fs::create_dir_all(&d);
@@ -2529,6 +2546,11 @@ pub fn autostart_get() -> bool {
 }
 
 pub fn autostart_set(on: bool) -> Result<(), String> {
+    // پورتابل = صفر ردِ سیستم. استارتاپ ویندوز در این حالت غیرفعال است.
+    if portable_root().is_some() {
+        log("در حالتِ پورتابل، استارتاپِ خودکار غیرفعال است (بدونِ ردِ سیستم)");
+        return Err("پورتابل".into());
+    }
     if on {
         let exe = std::env::current_exe().map_err(|e| e.to_string())?;
         let val = format!("\"{}\" --tray", exe.to_string_lossy());
