@@ -310,7 +310,10 @@ fn stream_settings(net: &str, sec: &str, p: &HashMap<String, String>, host: &str
         let sni = if !g(p, "sni").is_empty() { g(p, "sni") } else if !g(p, "host").is_empty() { g(p, "host") } else { sni_default };
         if !sni.is_empty() { tls["serverName"] = json!(sni); }
         if !g(p, "alpn").is_empty() { tls["alpn"] = json!(g(p, "alpn").split(',').collect::<Vec<_>>()); }
-        if g(p, "allowInsecure") == "1" || g(p, "insecure") == "1" { tls["allowInsecure"] = json!(true); }
+        // ⚠️ xray v26 فیلد allowInsecure را حذف کرده (خطای «has been removed») —
+        // پارامترِ لینک خوانده می‌شود ولی دیگر به کانفیگ تزریق نمی‌شود؛ گواهی نامعتبر
+        // فقط با REALITY/پین‌کردن قابل عبور است که ساب‌ها خودشان تعیین می‌کنند.
+        let _ = (g(p, "allowInsecure"), g(p, "insecure"));
         ss["tlsSettings"] = tls;
     } else if sec == "reality" {
         ss["security"] = json!("reality");
